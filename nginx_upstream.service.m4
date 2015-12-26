@@ -46,4 +46,5 @@ ifelse(WEB_SOCKETS, {{true}}, ExecStartPost=/usr/bin/etcdctl set /nginx/{{NGINX_
 #ExecStop=-/usr/bin/etcdctl rm /nginx/NGINX_NAME/config/UPSTREAM_NAME/server/proxy_pass
 #ExecStop=-/usr/bin/etcdctl rm --recursive /nginx/NGINX_NAME/config/UPSTREAM_NAME/upstream/
 
-
+[X-Fleet]
+MachineOf=UPSTREAM_SERVICE

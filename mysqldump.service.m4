@@ -17,6 +17,7 @@ define(MYSQL_DATABASE, foobar)dnl
 define(MYSQL_BACKUP_FILE, /tmp/test/mysqldump.sql)dnl
 dnl define(MYSQL_BACKUP_ARGS, --all-databases)
 define(MYSQL_BACKUP_ARGS, )
+define(FLEET_MACHINE_METADATA, )dnl
 
 [Unit]
 Description=Trigger a mysqldump of mysql://MYSQL_USER@MYSQL_HOST:MYSQL_PORT/MYSQL_DATABASE to MYSQL_BACKUP_FILE
@@ -55,3 +56,7 @@ ExecStart=/usr/bin/docker run \
 
 [Install]
 WantedBy=multi-user.target
+
+[X-Fleet]
+ifelse(FLEET_MACHINE_METADATA, {{}}, {{}}, {{MachineMetadata=FLEET_MACHINE_METADATA}})
+

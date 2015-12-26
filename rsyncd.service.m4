@@ -1,8 +1,8 @@
 changequote({{,}})dnl
 define(DOCKER_NAME, )dnl
-define(DOCKER_TAG, {{rsyncd}})dnl
+define(DOCKER_TAG, {{latest}})dnl
 define(DOCKER_REGISTRY, index.docker.io)dnl
-define(DOCKER_REPOSITORY, cloudposse/library)dnl
+define(DOCKER_REPOSITORY, {{cloudposse/rsyncd}})dnl
 define(DOCKER_IMAGE, {{DOCKER_REGISTRY}}/{{DOCKER_REPOSITORY}}:{{DOCKER_TAG}})dnl
 define(DOCKER_STOP_TIMEOUT, 20)dnl
 define(DOCKER_VOLUME, )dnl

@@ -37,6 +37,7 @@ define(FLEET_MACHINE_OF, )dnl
 define(FLEET_MACHINE_OF_SERVICE, {{FLEET_MACHINE_OF}}.service)dnl
 define(FLEET_CONFLICTS_WITH, )dnl
 define(FLEET_CONFLICTS_WITH_SERVICE, {{FLEET_CONFLICTS_WITH}}.service)dnl
+define(FLEET_MACHINE_METADATA, )dnl
 
 
 # FIXME: need to add support for --volumes-from
@@ -117,4 +118,5 @@ WantedBy=multi-user.target
 [X-Fleet]
 ifelse(FLEET_MACHINE_OF_SERVICE, {{.service}}, {{}}, MachineOf={{FLEET_MACHINE_OF_SERVICE}})
 ifelse(FLEET_CONFLICTS_WITH_SERVICE, {{.service}}, {{}}, Conflicts={{FLEET_CONFLICTS_WITH_SERVICE}})
+ifelse(FLEET_MACHINE_METADATA, {{}}, {{}}, {{MachineMetadata=FLEET_MACHINE_METADATA}})
 

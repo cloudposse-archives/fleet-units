@@ -3,6 +3,7 @@ define(TIMER_NAME, %n)dnl
 define(TIMER_SERVICE, {{TIMER_NAME}}.service)dnl
 define(TIMER_CALENDAR, *:*:00)dnl
 define(FLEET_GLOBAL_SERVICE, {{false}})dnl
+define(FLEET_MACHINE_METADATA, )dnl
 
 [Unit]
 Description=Periodically trigger TIMER_NAME @ TIMER_CALENDAR
@@ -27,4 +28,5 @@ WantedBy=TIMER_SERVICE
 [X-Fleet]
 ifelse(FLEET_GLOBAL_SERVICE, {{true}}, {{}}, {{MachineOf=TIMER_SERVICE}})
 ifelse(FLEET_GLOBAL_SERVICE, {{true}}, {{{{Global=true}}}}, {{}})
+ifelse(FLEET_MACHINE_METADATA, {{}}, {{}}, {{MachineMetadata=FLEET_MACHINE_METADATA}})
 
