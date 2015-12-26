@@ -22,6 +22,7 @@ define(DB_PASS, )dnl
 define(DB_NAME, )dnl
 define(DNS_SERVICE_NAME, {{{{vps}}}})dnl
 define(DNS_SERVICE_ID, {{{{VPS_USER}}}})dnl
+define(FLEET_MACHINE_METADATA, )dnl
 
 [Unit]
 Description=Standalone VPS ifelse(DOCKER_VOLUME, {{none}}, {{}}, with volumes from {{DOCKER_VOLUME}})
@@ -69,6 +70,8 @@ TimeoutStopSec=DOCKER_STOP_TIMEOUT{{s}}
 RestartSec=10s
 Restart=always
 
-
 [Install]
 WantedBy=multi-user.target
+
+[X-Fleet]
+ifelse(FLEET_MACHINE_METADATA, {{}}, {{}}, {{MachineMetadata=FLEET_MACHINE_METADATA}})

@@ -12,6 +12,7 @@ define(DOCKER_MEMORY, 500m)dnl
 define(DOCKER_CPU_SHARES, 100)dnl
 define(DNS_SERVICE_NAME, {{{{geoip-api}}}})dnl
 define(DNS_SERVICE_ID, %H)dnl
+define(FLEET_MACHINE_METADATA, )dnl
 
 [Unit]
 Description=GeoIP API
@@ -49,3 +50,6 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
+[X-Fleet]
+ifelse(FLEET_MACHINE_METADATA, {{}}, {{}}, {{MachineMetadata=FLEET_MACHINE_METADATA}})
