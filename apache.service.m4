@@ -55,6 +55,7 @@ define(DOCKER_CPU_SHARES, 100)dnl
 define(DNS_SERVICE_NAME, apache)dnl
 define(DNS_SERVICE_ID, %H)dnl
 define(FLEET_CONFLICTS, %p@*)dnl
+define(FLEET_MACHINE_METADATA, )dnl
 
 
 [Unit]
@@ -143,4 +144,5 @@ WantedBy=multi-user.target
 [X-Fleet]
 ifelse(DATA_VOL_SERVICE, {{.service}}, {{}}, MachineOf=DATA_VOL_SERVICE)
 ifelse(FLEET_CONFLICTS, {{}}, {{}}, Conflicts=FLEET_CONFLICTS)
+ifelse(FLEET_MACHINE_METADATA, {{}}, {{}}, {{MachineMetadata=FLEET_MACHINE_METADATA}})
 

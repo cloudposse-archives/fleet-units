@@ -31,8 +31,8 @@ EnvironmentFile=/etc/env.d/*
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker stop --time=DOCKER_STOP_TIMEOUT DOCKER_NAME
 ExecStartPre=-/usr/bin/docker rm DOCKER_NAME
-ExecStartPre=/usr/bin/etcdctl set /nginx/DOCKER_NAME/config/worker_processes 2
-ExecStartPre=/usr/bin/etcdctl set /nginx/DOCKER_NAME/config/worker_connections 1024
+ExecStartPre=-/usr/bin/etcdctl set /nginx/DOCKER_NAME/config/worker_processes 2
+ExecStartPre=-/usr/bin/etcdctl set /nginx/DOCKER_NAME/config/worker_connections 1024
 ExecStartPre=-/usr/bin/docker --debug=true pull DOCKER_IMAGE
 
 ExecStart=/usr/bin/docker run --name DOCKER_NAME \
