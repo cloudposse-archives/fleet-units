@@ -1,8 +1,8 @@
 changequote({{,}})dnl
-define(DOCKER_NAME, {{registry}})dnl
+define(DOCKER_NAME, {{metabase}})dnl
 define(DOCKER_REGISTRY, index.docker.io)dnl
-define(DOCKER_REPOSITORY, {{{{registry}}}})dnl
-define(DOCKER_TAG, {{2}})dnl
+define(DOCKER_REPOSITORY, {{{{metabase/metabase}}}})dnl
+define(DOCKER_TAG, {{latest}})dnl
 define(DOCKER_IMAGE, {{DOCKER_REGISTRY}}/{{DOCKER_REPOSITORY}}:{{DOCKER_TAG}})dnl
 define(DOCKER_STOP_TIMEOUT, 20)dnl
 define(DOCKER_VOLUME, )dnl
@@ -11,14 +11,13 @@ define(DOCKER_DNS, ${DNS_SERVER})dnl
 define(DOCKER_DNS_SEARCH, )dnl
 define(DOCKER_MEMORY, 500m)dnl
 define(DOCKER_CPU_SHARES, 100)dnl
-define(REGISTRY_HTTP_SECRET, {{secret}})dnl
-define(REGISTRY_HTTP_ADDR, :80)dnl
+define(MB_DB_FILE, /var/lib/metabase.db)dnl
 define(FLEET_GLOBAL_SERVICE, {{false}})dnl
 define(DNS_SERVICE_NAME, {{{{docker}}}})dnl
-define(DNS_SERVICE_ID, {{{{registry}}}})dnl
+define(DNS_SERVICE_ID, {{{{metabase}}}})dnl
 
 [Unit]
-Description=Docker Registry
+Description=Metabase
 Requires=docker.service
 After=docker.service
 Requires=flanneld.service
@@ -41,8 +40,7 @@ ExecStart=/usr/bin/docker run \
                               ifelse(DOCKER_DNS, {{}}, {{}}, --dns={{DOCKER_DNS}}) \
                               ifelse(DOCKER_DNS_SEARCH, {{}}, {{}}, --dns-search={{DOCKER_DNS_SEARCH}}) \
                               ifelse(DOCKER_VOLUME, {{}}, {{}}, --volume {{DOCKER_VOLUME}}) \
-                              ifelse(REGISTRY_HTTP_SECRET, {{}}, {{}}, -e "{{{{REGISTRY_HTTP_SECRET}}}}={{REGISTRY_HTTP_SECRET}}") \
-                              ifelse(REGISTRY_HTTP_ADDR, {{}}, {{}}, -e "{{{{REGISTRY_HTTP_ADDR}}}}={{REGISTRY_HTTP_ADDR}}") \
+                              ifelse(MB_DB_FILE, {{}}, {{}}, -e "{{{{MB_DB_FILE}}}}={{MB_DB_FILE}}") \
                               -e "SERVICE_NAME=DNS_SERVICE_NAME" \
                               -e "SERVICE_ID=DNS_SERVICE_ID" \
                               DOCKER_IMAGE

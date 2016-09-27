@@ -2,7 +2,7 @@ changequote({{,}})dnl
 define(DOCKER_NAME, skydns)dnl
 define(DOCKER_REGISTRY, index.docker.io)dnl
 define(DOCKER_REPOSITORY, skynetservices/skydns)dnl
-define(DOCKER_TAG, 2.3.0a)dnl
+define(DOCKER_TAG, 2.5.3a)dnl
 define(DOCKER_IMAGE, {{DOCKER_REPOSITORY}}:{{DOCKER_TAG}})dnl
 define(DOCKER_STOP_TIMEOUT, 20)dnl
 define(ETCD_HOST, ${COREOS_PRIVATE_IPV4}:4001)dnl
@@ -26,29 +26,29 @@ After=flanneld.service
 
 
 [Service]
-User=core
+User=root
 TimeoutStartSec=0
 EnvironmentFile=/etc/environment
 EnvironmentFile=/etc/env.d/*
 ExecStartPre=-/usr/bin/docker stop --time=DOCKER_STOP_TIMEOUT DOCKER_NAME
 ExecStartPre=-/usr/bin/docker rm DOCKER_NAME
 ExecStartPre=-/usr/bin/docker --debug=true pull DOCKER_IMAGE
-ExecStart=/usr/bin/docker run \
-                          --name DOCKER_NAME \
-                          -p SKYDNS_PORT:53/udp \
-                          -e "{{SKYDNS_DOMAIN}}=SKYDNS_DOMAIN" \
-                          -e "{{SKYDNS_NAMESERVERS}}=SKYDNS_NAMESERVERS" \
-                          -e "{{ETCD_MACHINES}}=ETCD_HOST" \
-                          -e "SERVICE_NAME=DNS_SERVICE_NAME" \
-                          -e "SERVICE_ID=DNS_SERVICE_ID" \
-                          DOCKER_IMAGE \
-                          -discover \
-                          -addr 0.0.0.0:53 \
-                          -rcache-ttl SKYDNS_RCACHE_TTL \
-                          -round-robin SKYDNS_ROUND_ROBIN 
+ExecStartPre=-/usr/bin/etcdctl mk /skydns/config '{"dns_addr":"0.0.0.0:53", "domain": "${LOCAL_DOMAIN}.", "ttl":30}'
+ExecStart=/bin/sh -c 'docker run \
+                            --name %p \
+                            --net=host \
+                            -e "SERVICE_NAME=DNS_SERVICE_NAME" \
+                            -e "SERVICE_ID=DNS_SERVICE_ID" \
+                            -v /run/systemd/resolve/resolv.conf:/etc/resolv.conf \
+                            skynetservices/skydns:2.5.3a -nameservers=SKYDNS_NAMESERVERS -machines=http://${COREOS_PRIVATE_IPV4}:4001/ -rcache-ttl SKYDNS_RCACHE_TTL -round-robin SKYDNS_ROUND_ROBIN'
 
-#ExecStartPost=/bin/sh -c "ip=($(ifconfig docker0| grep netmask)); echo DNS_SERVER=\${ip[1]}| sudo tee /etc/env.d/dns.sh"
-ExecStartPost=/bin/sh -c "ip route |grep docker0|xargs -n1 echo |tail -1|xargs -I: echo DNS_SERVER=:|sudo tee /etc/env.d/dns.sh"
+ExecStartPost=/bin/sh -c 'rm -f /etc/resolv.conf \
+                          && ( \
+                               echo -e "nameserver ${COREOS_PRIVATE_IPV4}\nnameserver 8.8.8.8\nnameserver 8.8.4.4\nsearch ${DOMAIN} ${LOCAL_DOMAIN} svc.${LOCAL_DOMAIN} cluster.${LOCAL_DOMAIN}" | \
+                                 sudo tee /etc/resolv.conf \
+                             )'
+
+ExecStopPost=/bin/sh -c 'ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf'
 
 Restart=always
 RestartSec=10s

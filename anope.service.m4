@@ -21,15 +21,17 @@ define(FLEET_MACHINE_OF_SERVICE, {{FLEET_MACHINE_OF}}.service)dnl
 define(FLEET_CONFLICTS_WITH, )dnl
 define(FLEET_CONFLICTS_WITH_SERVICE, {{FLEET_CONFLICTS_WITH}}.service)dnl
 define(ANOPE_SMTP_HOST, 127.0.0.1)dnl
-define(ANOPE_ADMIN_EMAIL, ops@localhost)dnl
+define(ANOPE_ADMIN_EMAIL, {{ops@ourdomain.com}})dnl
 define(ANOPE_NAMESERVERS, 8.8.8.8 8.8.4.4)dnl
-define(ANOPE_UPLINK_HOST, localhost)dnl
+define(ANOPE_UPLINK_HOST, {{irc.ourdomain.com}})dnl
 define(ANOPE_UPLINK_PORT, 7000)dnl
 define(ANOPE_UPLINK_PASSWORD, secret)dnl
-define(ANOPE_SERVERINFO_NAME, anope.localnet)dnl
+define(ANOPE_SERVERINFO_NAME, {{anope.localnet}})dnl
+define(ANOPE_SALT, {{salty}})dnl
+define(ANOPE_URL, )dnl
 define(MYSQL_USER, root)dnl
 define(MYSQL_PASSWORD, {{password}})dnl
-define(MYSQL_HOST, localhsot)dnl
+define(MYSQL_HOST, {{localhost}})dnl
 define(MYSQL_PORT, 3306)dnl
 define(MYSQL_DATABASE, foobar)dnl
 define(MYSQL_PREFIX, anope_)dnl
@@ -62,10 +64,10 @@ ExecStart=/usr/bin/docker run --name DOCKER_NAME \
                               -e "SERVICE_NAME=DNS_SERVICE_NAME" \
                               -e "SERVICE_ID=DNS_SERVICE_ID" \
                               ifelse(MYSQL_USER, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(MYSQL_PASSWORD, {{}}, {{}}, -e "{{{{MYSQL_PASS}}}}={{MYSQL_PASSWORD}}") \
+                              ifelse(MYSQL_PASSWORD, {{}}, {{}}, -e "{{{{MYSQL_PASSWORD}}}}={{MYSQL_PASSWORD}}") \
                               ifelse(MYSQL_HOST, {{}}, {{}}, -e "{{{{MYSQL_HOST}}}}={{MYSQL_HOST}}") \
-                              ifelse(MYSQL_NAME, {{}}, {{}}, -e "{{{{MYSQL_NAME}}}}={{MYSQL_NAME}}") \
-                              ifelse(MYSQL_PORT, {{}}, {{}}, -e "{{{{MYSQL_NAME}}}}={{MYSQL_PORT}}") \
+                              ifelse(MYSQL_DATABASE, {{}}, {{}}, -e "{{{{MYSQL_DATABASE}}}}={{MYSQL_DATABASE}}") \
+                              ifelse(MYSQL_PORT, {{}}, {{}}, -e "{{{{MYSQL_PORT}}}}={{MYSQL_PORT}}") \
                               ifelse(MYSQL_PREFIX, {{}}, {{}}, -e "{{{{MYSQL_PREFIX}}}}={{MYSQL_PREFIX}}") \
                               ifelse(ANOPE_SMTP_HOST, {{}}, {{}}, -e "{{{{ANOPE_SMTP_HOST}}}}={{ANOPE_SMTP_HOST}}") \
                               ifelse(ANOPE_ADMIN_EMAIL, {{}}, {{}}, -e "{{{{ANOPE_ADMIN_EMAIL}}}}={{ANOPE_ADMIN_EMAIL}}") \
@@ -74,6 +76,8 @@ ExecStart=/usr/bin/docker run --name DOCKER_NAME \
                               ifelse(ANOPE_UPLINK_PORT, {{}}, {{}}, -e "{{{{ANOPE_UPLINK_PORT}}}}={{ANOPE_UPLINK_PORT}}") \
                               ifelse(ANOPE_UPLINK_PASSWORD, {{}}, {{}}, -e "{{{{ANOPE_UPLINK_PASSWORD}}}}={{ANOPE_UPLINK_PASSWORD}}") \
                               ifelse(ANOPE_SERVERINFO_NAME, {{}}, {{}}, -e "{{{{ANOPE_SERVERINFO_NAME}}}}={{ANOPE_SERVERINFO_NAME}}") \
+                              ifelse(ANOPE_SALT, {{}}, {{}}, -e "{{{{ANOPE_SALT}}}}={{ANOPE_SALT}}") \
+                              ifelse(ANOPE_URL, {{}}, {{}}, -e "{{{{ANOPE_URL}}}}={{ANOPE_URL}}") \
                               DOCKER_IMAGE
 
 ExecStop=-/usr/bin/docker stop --time=DOCKER_STOP_TIMEOUT DOCKER_NAME

@@ -35,10 +35,9 @@ define(INSPIRCD_CLOAK_KEY, token)dnl
 define(INSPIRCD_STATS_USERNAME, stats)dnl
 define(INSPIRCD_STATS_PASSWORD, password)dnl
 define(INSPIRCD_SQLLOG_QUERY, INSERT INTO events (nick, host, ip, user_name, ident, server, channel, event, message) VALUES ('$nick', '$host', '$ip', '$gecos', '$ident', '$server', '$channel', '$event', '$message'))dnl
-
 define(MYSQL_USER, root)dnl
 define(MYSQL_PASSWORD, {{password}})dnl
-define(MYSQL_HOST, localhsot)dnl
+define(MYSQL_HOST, localhost)dnl
 define(MYSQL_PORT, 3306)dnl
 define(MYSQL_DATABASE, foobar)dnl
 
@@ -69,26 +68,26 @@ ExecStart=/usr/bin/docker run --name DOCKER_NAME \
                               ifelse(SERVICE_PORTS, {{}}, {{}}, -p {{SERVICE_PORTS}}) \
                               -e "SERVICE_NAME=DNS_SERVICE_NAME" \
                               -e "SERVICE_ID=DNS_SERVICE_ID" \
-                              ifelse(INSPIRCD_SERVER_NAME, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_SERVER_DESCRIPTION, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_NETWORK, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_ADMIN_NAME, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_ADMIN_NICK, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_ADMIN_EMAIL, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_LINK_NAME, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_LINK_PORT, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_LINK_SEND_PASS, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_LINK_RECV_PASS, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_CGIHOST_WEBIRC_PASSWORD, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_CLOAK_KEY, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_STATS_USERNAME, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_STATS_PASSWORD, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(INSPIRCD_SQLLOG_QUERY, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
+                              ifelse(INSPIRCD_SERVER_NAME, {{}}, {{}}, -e "{{{{INSPIRCD_SERVER_NAME}}}}={{INSPIRCD_SERVER_NAME}}") \
+                              ifelse(INSPIRCD_SERVER_DESCRIPTION, {{}}, {{}}, -e "{{{{INSPIRCD_SERVER_DESCRIPTION}}}}={{INSPIRCD_SERVER_DESCRIPTION}}") \
+                              ifelse(INSPIRCD_NETWORK, {{}}, {{}}, -e "{{{{INSPIRCD_NETWORK}}}}={{INSPIRCD_NETWORK}}") \
+                              ifelse(INSPIRCD_ADMIN_NAME, {{}}, {{}}, -e "{{{{INSPIRCD_ADMIN_NAME}}}}={{INSPIRCD_ADMIN_NAME}}") \
+                              ifelse(INSPIRCD_ADMIN_NICK, {{}}, {{}}, -e "{{{{INSPIRCD_ADMIN_NICK}}}}={{INSPIRCD_ADMIN_NICK}}") \
+                              ifelse(INSPIRCD_ADMIN_EMAIL, {{}}, {{}}, -e "{{{{INSPIRCD_ADMIN_EMAIL}}}}={{INSPIRCD_ADMIN_EMAIL}}") \
+                              ifelse(INSPIRCD_LINK_NAME, {{}}, {{}}, -e "{{{{INSPIRCD_LINK_NAME}}}}={{INSPIRCD_LINK_NAME}}") \
+                              ifelse(INSPIRCD_LINK_PORT, {{}}, {{}}, -e "{{{{INSPIRCD_LINK_PORT}}}}={{INSPIRCD_LINK_PORT}}") \
+                              ifelse(INSPIRCD_LINK_SEND_PASS, {{}}, {{}}, -e "{{{{INSPIRCD_LINK_SEND_PASS}}}}={{INSPIRCD_LINK_SEND_PASS}}") \
+                              ifelse(INSPIRCD_LINK_RECV_PASS, {{}}, {{}}, -e "{{{{INSPIRCD_LINK_RECV_PASS}}}}={{INSPIRCD_LINK_RECV_PASS}}") \
+                              ifelse(INSPIRCD_CGIHOST_WEBIRC_PASSWORD, {{}}, {{}}, -e "{{{{INSPIRCD_CGIHOST_WEBIRC_PASSWORD}}}}={{INSPIRCD_CGIHOST_WEBIRC_PASSWORD}}") \
+                              ifelse(INSPIRCD_CLOAK_KEY, {{}}, {{}}, -e "{{{{INSPIRCD_CLOAK_KEY}}}}={{INSPIRCD_CLOAK_KEY}}") \
+                              ifelse(INSPIRCD_STATS_USERNAME, {{}}, {{}}, -e "{{{{INSPIRCD_STATS_USERNAME}}}}={{INSPIRCD_STATS_USERNAME}}") \
+                              ifelse(INSPIRCD_STATS_PASSWORD, {{}}, {{}}, -e "{{{{INSPIRCD_STATS_PASSWORD}}}}={{INSPIRCD_STATS_PASSWORD}}") \
+                              ifelse(INSPIRCD_SQLLOG_QUERY, {{}}, {{}}, -e "{{{{INSPIRCD_SQLLOG_QUERY}}}}={{INSPIRCD_SQLLOG_QUERY}}") \
                               ifelse(MYSQL_USER, {{}}, {{}}, -e "{{{{MYSQL_USER}}}}={{MYSQL_USER}}") \
-                              ifelse(MYSQL_PASSWORD, {{}}, {{}}, -e "{{{{MYSQL_PASS}}}}={{MYSQL_PASSWORD}}") \
+                              ifelse(MYSQL_PASSWORD, {{}}, {{}}, -e "{{{{MYSQL_PASSWORD}}}}={{MYSQL_PASSWORD}}") \
                               ifelse(MYSQL_HOST, {{}}, {{}}, -e "{{{{MYSQL_HOST}}}}={{MYSQL_HOST}}") \
-                              ifelse(MYSQL_NAME, {{}}, {{}}, -e "{{{{MYSQL_NAME}}}}={{MYSQL_NAME}}") \
-                              ifelse(MYSQL_PORT, {{}}, {{}}, -e "{{{{MYSQL_NAME}}}}={{MYSQL_PORT}}") \
+                              ifelse(MYSQL_DATABASE, {{}}, {{}}, -e "{{{{MYSQL_DATABASE}}}}={{MYSQL_DATABASE}}") \
+                              ifelse(MYSQL_PORT, {{}}, {{}}, -e "{{{{MYSQL_PORT}}}}={{MYSQL_PORT}}") \
                                 DOCKER_IMAGE
 
 ExecStop=-/usr/bin/docker stop --time=DOCKER_STOP_TIMEOUT DOCKER_NAME

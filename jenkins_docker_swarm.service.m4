@@ -38,7 +38,7 @@ ExecStart=/usr/bin/docker run \
                           -v JENKINS_HOME \
                           -v /usr/bin/docker:/usr/bin/docker:ro \
                           -v /var/run/docker.sock:/var/run/docker.sock \
-                          -v /home/core/.dockercfg:JENKINS_HOME/.dockercfg \
+                          -v /home/core/.docker:JENKINS_HOME/.docker \
                           -e "SERVICE_NAME=DNS_SERVICE_NAME" \
                           -e "SERVICE_ID=DNS_SERVICE_ID" \
                           -e "{{DOCKER_NAME}}=DOCKER_NAME" \

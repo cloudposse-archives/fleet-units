@@ -5,14 +5,17 @@ define(DOCKER_REPOSITORY, {{cloudposse/haproxy-with-discover}})dnl
 define(DOCKER_TAG, {{latest}})dnl
 define(DOCKER_IMAGE, {{DOCKER_REGISTRY}}/{{DOCKER_REPOSITORY}}:{{DOCKER_TAG}})dnl
 define(DOCKER_STOP_TIMEOUT, 20)dnl
-define(DOCKER_DNS, ${DNS_SERVER})dnl
+define(DOCKER_DNS,)dnl
 define(DOCKER_DNS_SEARCH, )dnl
 define(DOCKER_MEMORY, 500m)dnl
 define(DOCKER_CPU_SHARES, 100)dnl
+define(DOCKER_NET,)dnl
 define(HAPROXY_PORT, )dnl
 define(HAPROXY_ADMIN_PORT, )dnl
+define(HAPROXY_BIND_OPTIONS, )dnl
 define(HAPROXY_MODE, tcp)dnl
 dnl define(HAPROXY_CHECK, )dnl
+define(HAPROXY_NAMESERVER, ${COREOS_PRIVATE_IPV4})dnl
 define(HAPROXY_CHECK_METHOD, GET)dnl
 define(HAPROXY_CHECK_PATH, {{/asdasdad}})dnl
 define(HAPROXY_CHECK_VERSION, HTTP/1.1)dnl
@@ -41,6 +44,7 @@ ExecStartPre=-/usr/bin/docker --debug=true pull DOCKER_IMAGE
 ExecStart=/usr/bin/docker run \
                           --rm \
                           --name DOCKER_NAME \
+                          ifelse(DOCKER_NET, {{}}, {{}}, --net={{DOCKER_NET}}) \
                           ifelse(DOCKER_MEMORY, {{}}, {{}}, --memory={{DOCKER_MEMORY}}) \
                           ifelse(DOCKER_CPU_SHARES, {{}}, {{}}, --cpu-shares={{DOCKER_CPU_SHARES}}) \
                           ifelse(DOCKER_DNS, {{}}, {{}}, --dns={{DOCKER_DNS}}) \
@@ -53,6 +57,8 @@ dnl                          ifelse(HAPROXY_CHECK, {{}}, {{}}, -e "{{{{HAPROXY_C
                           ifelse(HAPROXY_CHECK_PATH, {{}}, {{}}, -e "{{{{HAPROXY_CHECK_PATH}}}}={{HAPROXY_CHECK_PATH}}") \
                           ifelse(HAPROXY_CHECK_VERSION, {{}}, {{}}, -e "{{{{HAPROXY_CHECK_VERSION}}}}={{HAPROXY_CHECK_VERSION}}") \
                           ifelse(HAPROXY_CHECK_HOST, {{}}, {{}}, -e "{{{{HAPROXY_CHECK_HOST}}}}={{HAPROXY_CHECK_HOST}}") \
+                          ifelse(HAPROXY_BIND_OPTIONS, {{}}, {{}}, -e "{{{{HAPROXY_BIND_OPTIONS}}}}={{HAPROXY_BIND_OPTIONS}}") \
+                          ifelse(HAPROXY_NAMESERVER, {{}}, {{}}, -e "{{{{HAPROXY_NAMESERVER}}}}={{HAPROXY_NAMESERVER}}") \
                           -e "{{CONFD_PREFIX}}=CONFD_PREFIX" \
                           -e "ETCD_HOST=${COREOS_PRIVATE_IPV4}" \
                           -e "SERVICE_9000_NAME=DNS_SERVICE_NAME" \

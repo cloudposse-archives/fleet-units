@@ -16,7 +16,6 @@ dnl After=TIMER_SERVICE
 
 [Timer]
 OnBootSec=15m
-OnUnitActiveSec=10m
 OnCalendar=TIMER_CALENDAR
 AccuracySec=5m
 Persistent=true     

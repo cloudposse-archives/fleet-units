@@ -10,6 +10,7 @@ define(DOCKER_STOP_TIMEOUT, 20)dnl
 define(DOCKER_HOSTNAME, something.vps.ourcloud.local)dnl
 define(DOCKER_DNS, ${DNS_SERVER})dnl
 define(VPS_SSH_PORT, )dnl
+define(VPS_SSH_HOSTNAME, localhost)dnl
 define(VPS_USER, {{root}})dnl
 define(VPS_GROUP, {{VPS_USER}})dnl
 define(VPS_PASSWORD, {{}})dnl
@@ -43,7 +44,6 @@ ExecStart=/usr/bin/docker run \
                           ifelse(DOCKER_DNS, {{}}, {{}}, --dns {{DOCKER_DNS}}) \
                           ifelse(DOCKER_HOSTNAME, {{none}}, {{}}, --hostname {{DOCKER_HOSTNAME}}) \
                           ifelse(DOCKER_VOLUME, {{none}}, {{}}, --volume {{DOCKER_VOLUME}}) \
-                          ifelse(VPS_SSH_PORT, {{}}, {{}}, -p VPS_SSH_PORT:22) \
                           -e "{{VPS_USER}}=VPS_USER" \
                           -e "{{VPS_GROUP}}=VPS_GROUP" \
                           -e "{{VPS_ENABLE_SUDO}}=VPS_ENABLE_SUDO" \
@@ -52,6 +52,8 @@ ExecStart=/usr/bin/docker run \
                           -e "SERVICE_NAME=DNS_SERVICE_NAME" \
                           -e "SERVICE_ID=DNS_SERVICE_ID" \
                           DOCKER_IMAGE 
+
+ifelse(VPS_SSH_PORT, {{}}, {{}}, ExecStartPost=/usr/bin/etcdctl set /haproxy/tcp/{{VPS_SSH_PORT}}/{{DOCKER_NAME}} "{{VPS_SSH_HOSTNAME}}:22 check port 22 resolvers dns") 
 
 ExecStop=-/usr/bin/docker stop --time=DOCKER_STOP_TIMEOUT DOCKER_NAME
 TimeoutStopSec=DOCKER_STOP_TIMEOUT{{s}}

@@ -19,18 +19,8 @@ WantedBy=NGINX_SERVICE
 
 [Unit]
 Description=Nginx Configuration Service
-#Requires=docker.service
-#After=docker.service
-#Requires=flanneld.service
-#After=flanneld.service
-#Requires=etcd2.service
-#After=etcd2.service
-#BindTo=etcd2.service
-
-# Our data volume must be ready
-After=NGINX_SERVICE
-#BindTo=NGINX_SERVICE
-PartOf=NGINX_SERVICE
+Requires=docker.service
+After=docker.service
 
 [Service]
 User=core
@@ -51,8 +41,8 @@ ExecStart=/usr/bin/docker run \
                           ifelse(DOCKER_DNS, {{}}, {{}}, --dns={{DOCKER_DNS}}) \
                           ifelse(DOCKER_DNS_SEARCH, {{}}, {{}}, --dns-search={{DOCKER_DNS_SEARCH}}) \
                           --rm \
+                          --volume /etc/nginx \
                           -v /var/run/docker.sock:/var/run/docker.sock \
-                          --volumes-from=NGINX_NAME \
                           -e "{{DOCKER_DNS}}=DOCKER_DNS" \
                           -e "ETCD_HOST=${COREOS_PRIVATE_IPV4}" \
                           -e "{{CONFD_INTERVAL}}=CONFD_INTERVAL" \

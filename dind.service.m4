@@ -1,18 +1,18 @@
 changequote({{,}})dnl
-define(DOCKER_NAME, {{registry}})dnl
+define(DOCKER_NAME, {{docker-in-docker}})dnl
 define(DOCKER_REGISTRY, index.docker.io)dnl
-define(DOCKER_REPOSITORY, {{{{registry}}}})dnl
-define(DOCKER_TAG, {{2}})dnl
+define(DOCKER_REPOSITORY, {{{{docker}}}})dnl
+define(DOCKER_TAG, {{dind}})dnl
 define(DOCKER_IMAGE, {{DOCKER_REGISTRY}}/{{DOCKER_REPOSITORY}}:{{DOCKER_TAG}})dnl
 define(DOCKER_STOP_TIMEOUT, 20)dnl
 define(DOCKER_VOLUME, )dnl
 define(DOCKER_VOLUME_OCTAL_MODE, 1777)dnl
 define(DOCKER_DNS, ${DNS_SERVER})dnl
 define(DOCKER_DNS_SEARCH, )dnl
-define(DOCKER_MEMORY, 500m)dnl
+define(DOCKER_MEMORY, 3500m)dnl
 define(DOCKER_CPU_SHARES, 100)dnl
-define(REGISTRY_HTTP_SECRET, {{secret}})dnl
-define(REGISTRY_HTTP_ADDR, :80)dnl
+define(DOCKER_OPTS, {{docker daemon --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375  --storage-driver=overlay --insecure-registry=registry.docker}})dnl
+dnl define(DOCKER_OPTS, {{docker daemon --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375  --insecure-registry=registry.docker}})dnl
 define(FLEET_GLOBAL_SERVICE, {{false}})dnl
 define(DNS_SERVICE_NAME, {{{{docker}}}})dnl
 define(DNS_SERVICE_ID, {{{{registry}}}})dnl
@@ -36,16 +36,18 @@ ExecStartPre=-/usr/bin/docker --debug=true pull DOCKER_IMAGE
 ExecStart=/usr/bin/docker run \
                               --name DOCKER_NAME \
                               --rm \
+                              --volume /usr/local/bin/ \
+                              --volume /tmp/ \
+                              --privileged \
                               ifelse(DOCKER_MEMORY, {{}}, {{}}, --memory={{DOCKER_MEMORY}}) \
                               ifelse(DOCKER_CPU_SHARES, {{}}, {{}}, --cpu-shares={{DOCKER_CPU_SHARES}}) \
                               ifelse(DOCKER_DNS, {{}}, {{}}, --dns={{DOCKER_DNS}}) \
                               ifelse(DOCKER_DNS_SEARCH, {{}}, {{}}, --dns-search={{DOCKER_DNS_SEARCH}}) \
                               ifelse(DOCKER_VOLUME, {{}}, {{}}, --volume {{DOCKER_VOLUME}}) \
-                              ifelse(REGISTRY_HTTP_SECRET, {{}}, {{}}, -e "{{{{REGISTRY_HTTP_SECRET}}}}={{REGISTRY_HTTP_SECRET}}") \
-                              ifelse(REGISTRY_HTTP_ADDR, {{}}, {{}}, -e "{{{{REGISTRY_HTTP_ADDR}}}}={{REGISTRY_HTTP_ADDR}}") \
                               -e "SERVICE_NAME=DNS_SERVICE_NAME" \
                               -e "SERVICE_ID=DNS_SERVICE_ID" \
-                              DOCKER_IMAGE
+                              DOCKER_IMAGE \
+                              DOCKER_OPTS
 
 # Deregister the service
 ExecStop=/usr/bin/docker stop --time=DOCKER_STOP_TIMEOUT DOCKER_NAME

@@ -17,6 +17,7 @@ define(MYSQL_BACKUP_STORAGE, )dnl
 define(MYSQL_QUERY_CACHE_TYPE, {{1}})dnl
 define(MYSQL_QUERY_CACHE_LIMIT, 1M)dnl
 define(MYSQL_QUERY_CACHE_SIZE, 16M)dnl
+define(MYSQL_READ_RND_BUFFER_SIZE, 256K)dnl
 define(MYSQL_TABLE_OPEN_CACHE, 2000)dnl
 define(MYSQL_TMP_TABLE_SIZE, 32M)dnl
 define(MYSQL_MAX_HEAP_TABLE_SIZE, 32M)dnl
@@ -91,6 +92,7 @@ dnl                                        Performance tuning options
                                            --query_cache_type=MYSQL_QUERY_CACHE_TYPE \
                                            --query_cache_limit=MYSQL_QUERY_CACHE_LIMIT \
                                            --query_cache_size=MYSQL_QUERY_CACHE_SIZE \
+                                           --read_rnd_buffer_size=MYSQL_READ_RND_BUFFER_SIZE \
                                            --table_open_cache=MYSQL_TABLE_OPEN_CACHE \
                                            --tmp_table_size=MYSQL_TMP_TABLE_SIZE \
                                            --max_heap_table_size=MYSQL_MAX_HEAP_TABLE_SIZE \
@@ -102,10 +104,9 @@ dnl                                        Performance tuning options
                                            --innodb_flush_log_at_trx_commit=MYSQL_INNODB_FLUSH_LOG_AT_TRX_COMMIT \
                                            --innodb_log_buffer_size=MYSQL_INNODB_LOG_BUFFER_SIZE 
 
-
-
-ExecStartPost=/usr/bin/etcdctl set /mysql/DOCKER_NAME/machine '%m'
-ExecStop=-/usr/bin/sh -c "/usr/bin/docker exec DOCKER_NAME mysqladmin -uroot {{-p}}MYSQL_ROOT_PASS shutdown || true"
+#ExecStartPost=/usr/bin/docker exec DOCKER_NAME rm -f $$INIT_SQL
+ExecStartPost=-/usr/bin/etcdctl set /mysql/DOCKER_NAME/machine '%m'
+ExecStop=-/usr/bin/docker exec DOCKER_NAME mysqladmin -uroot {{-p}}MYSQL_ROOT_PASS shutdown
 ExecStopPost=-/usr/bin/docker stop --time=DOCKER_STOP_TIMEOUT DOCKER_NAME
 TimeoutStopSec=DOCKER_STOP_TIMEOUT{{s}}
 RestartSec=10s

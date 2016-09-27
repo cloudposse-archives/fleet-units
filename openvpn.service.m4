@@ -12,7 +12,7 @@ define(OPENVPN_PORT, )dnl
 define(OPENVPN_DEBUG, 1)dnl
 define(DNS_SERVICE_NAME, jenkins)dnl
 define(DNS_SERVICE_ID, %H)dnl
-define(FLEET_GLOBAL_SERVICE, {{true}})dnl
+define(FLEET_GLOBAL_SERVICE, {{false}})dnl
 
 [Unit]
 Description=OpenVPN on DOCKER_HOSTNAME
@@ -49,7 +49,7 @@ ExecStartPre=-/usr/bin/docker --debug=true pull DOCKER_IMAGE
 {{#}}
 
 ExecStartPre=/usr/bin/sudo /bin/bash -c "sed -r -i 's:(^push dhcp-option DNS) .*$:\\1 DOCKER_DNS:g' $(echo DOCKER_VOLUME|cut -d':' -f1)/openvpn.conf"
-ExecStartPre=/usr/bin/sudo /bin/bash -c "sed -r -i \"s:(^push route .*net_gateway).*$:push route $(hostname -i) 255.255.255.255 net_gateway:g\" $(echo DOCKER_VOLUME|cut -d':' -f1)/openvpn.conf"
+ExecStartPre=/usr/bin/sudo /bin/bash -c "sed -r -i \"s:(^push route .*net_gateway).*$:push route $(hostname) 255.255.255.255 net_gateway:g\" $(echo DOCKER_VOLUME|cut -d':' -f1)/openvpn.conf"
 ExecStart=/usr/bin/docker run \
                           --name DOCKER_NAME \
                           --rm \
