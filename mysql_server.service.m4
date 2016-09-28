@@ -30,6 +30,9 @@ define(MYSQL_KEY_BUFFER_SIZE, 9M)dnl
 define(MYSQL_JOIN_BUFFER_SIZE, 8M)dnl
 define(MYSQL_MAX_USER_CONNECTIONS, {{150}})dnl
 define(MYSQL_MAX_CONNECTIONS, {{150}})dnl
+define(MYSQL_GENERAL_LOG, {{1}})dnl
+define(MYSQL_EXPLICIT_DEFAULTS_FOR_TIMESTAMP, {{false}})dnl
+define(MYSQL_SQL_MODE, )dnl
 
 define(DNS_SERVICE_NAME, mysql)dnl
 define(DNS_SERVICE_ID, server)dnl
@@ -99,6 +102,9 @@ dnl                                        Performance tuning options
                                            --key_buffer_size=MYSQL_KEY_BUFFER_SIZE \
                                            --max_user_connections=MYSQL_MAX_USER_CONNECTIONS \
                                            --max_connections=MYSQL_MAX_CONNECTIONS \
+                                           --general_log=MYSQL_GENERAL_LOG \
+                                           --sql_mode='MYSQL_SQL_MODE' \
+                                           --explicit_defaults_for_timestamp=MYSQL_EXPLICIT_DEFAULTS_FOR_TIMESTAMP \
                                            --innodb_buffer_pool_size=MYSQL_INNODB_BUFFER_POOL_SIZE \
                                            --innodb_file_per_table=MYSQL_INNODB_FILE_PER_TABLE \
                                            --innodb_flush_log_at_trx_commit=MYSQL_INNODB_FLUSH_LOG_AT_TRX_COMMIT \
